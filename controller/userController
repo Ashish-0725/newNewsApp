@@ -1,0 +1,81 @@
+const UserModel=require("../model/userModel");
+const passport=require("passport");
+const passportLocalMongoose=require("passport-local-mongoose")
+async function register(req,res){
+res.render("register");
+}
+
+async function registerNew(req,res){
+UserModel.register({firstName:req.body.fname,
+lastName:req.body.lname,
+username:req.body.username},req.body.password,function(err,user){
+  if(err){
+    console.log(err);
+    res.redirect("/admin/dashboard/register");
+  }else{
+    passport.authenticate("local")(req,res,function(){
+      res.redirect("/admin/dashboard/viewUsers");
+    });
+  }
+});
+}
+
+async function viewUsers(req,res){
+
+ UserModel.find({},function(err,found){
+   if(err){
+     console.log(err);
+   }else{
+     if(found){
+       res.render("viewUsers",{users:found});
+     }
+   }
+ })
+
+}
+
+async function editUser(req,res){
+  const userId=req.params.userId;
+  // console.log(userId);
+  UserModel.findOne({_id:userId},function(err,found){
+    if(err){
+      console.log(err);
+    }else{
+      if(found){
+        res.render("editUser",{user:found});
+      }
+    }
+  })
+}
+
+async function editThisUser(req,res){
+  userId=req.params.userId;
+  console.log(userId);
+  firstName=req.body.fname;
+  lastName=req.body.lname;
+  username=req.body.username;
+  UserModel.findByIdAndUpdate({_id:userId},{
+    firstName:firstName,
+    lastName:lastName,
+    username:username
+  },function(err,found){
+    if(err){
+      console.log(err);
+    }else{
+      if(found){
+        res.redirect("/admin/dashboard/viewUsers");
+      }
+    }
+  })
+}
+
+async function deleteUser(req,res){
+  res.render("deleteUser")
+}
+
+module.exports.deleteUser=deleteUser;
+module.exports.editThisUser=editThisUser;
+module.exports.editUser=editUser;
+module.exports.registerNew=registerNew;
+module.exports.register=register;
+module.exports.viewUsers=viewUsers;

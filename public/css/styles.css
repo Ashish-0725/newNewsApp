@@ -1,0 +1,30 @@
+.head{
+  background-color: #6D9886;
+}
+.contDash{
+  background-image: url("../images/newsDashboard.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%,100%;
+  height: 625px;
+  width: 1800px;
+}
+footer{
+  background-color: #6D9886;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+a{
+  text-decoration: none;
+  color: white;
+}
+/* .articleCon :nth-last-child(div){
+  margin-bottom: 50px;
+  padding-bottom: 20px;
+} */
+span{
+  font-size: 12px;
+}
+.deleteIcon, .editIcon{
+color: black;
+}

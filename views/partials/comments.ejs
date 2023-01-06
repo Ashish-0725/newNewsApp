@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-6 text-center">
+          <h1>Add your comments</h1>
+          <form id="commentFormId">
+          <textarea name="comment" id="textareaId" cols="25" rows="6" class="form-control mt-5"></textarea>
+              <button class="btn btn-dark mt-4" style="float: right;">Submit</button>
+          </form>                
+      </div>
+  </div>
+</div>
+<input type="text" id="articleID" style="display: none;" value="<%=article._id%>">
+<!-- list of commets -->
+<div class="container commentsList">
+  <div class="row justify-content-center mb-5">
+    <h1 class="text-center mb-5">Comments </h1>
+    <div class="col-6  mb-5">
+      <ul id="ulId"  style=" list-style-type: none;">
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+  getComments();
+})
+
+    function getComments() {
+    // alert("ok")
+    const articleId=$("#articleID").val();
+    // console.log("ajax comments"+articleId);
+    $.ajax({
+      url: "/admin/dashboard/viewArticles/viewThisArticle/get/"+articleId,
+      method: "GET",
+      data:{articleId:articleId},
+      dataType: "json",
+      contentType: "application/x-www-form-urlencoded",
+      success: function (cb) {
+        console.log(cb.success);
+        var newUL = "";
+        $.each(cb.found, function (key, item) {
+        newUL = '<li class="ms-5"><span><b>' +item.commentedBy.firstName+"</b></span> - <span>"+ item.date +"</span><br>"+"<span>"+item.commentBody+ "</span></li>"+"<hr>";
+          $("#ulId").append(newUL);
+        });
+      },
+    });
+  }
+</script>

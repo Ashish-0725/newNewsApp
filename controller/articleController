@@ -1,0 +1,136 @@
+const ArticleModel=require("../model/articleModel");
+const UserModel=require("../model/userModel");
+const CommentsModel=require("../model/commentsModel");
+
+
+async function addArticle(req,res){
+res.render("addArticle");
+console.log("addArticle page");
+}
+
+async function addNewArticle(req,res){
+  const title=req.body.title;
+  const content=req.body.content;
+  const image=req.file.filename;
+  // const user=req.user;
+  // var userName;
+  console.log(title);
+  console.log(content);
+  console.log(image);
+  // console.log(req.user);
+  // UserModel.findOne({_id:user},function(err,found){
+  //   if(err){
+  //     console.log(err);
+  //   }else{
+  //     userName=found.firstName
+  //   }
+  // })
+  // console.log("name = "+userName);
+  const article=new ArticleModel({
+    title:title,
+    content:content,
+    image:image,
+    postedBy:req.user
+  });
+  article.save(function(err){
+    if(err){
+      console.log(err);
+    }else{
+      console.log(" article added to DB ");
+      res.redirect("/admin/dashboard/viewArticles");
+    }
+  });
+
+}
+
+async function viewArticles(req,res){
+
+ArticleModel.find({},function(err,found){
+  if(err){
+    console.log(err);
+  }else{
+    if(found){
+      res.render("viewArticles",{articles:found});
+    }
+  }
+})
+
+}
+
+async function viewThisArticle(req,res){
+  const articleId=req.params.articleId;
+  console.log("this article is "+articleId);
+
+  ArticleModel.findOne({_id:articleId},function(err,found){
+    if(err){
+      console.log(err);
+    }else{
+      if(found){
+        res.render("viewThisArticle",{article:found});
+      }
+    }
+  }).populate("postedBy").populate("comments");
+}
+
+
+
+async function addcomment(req,res){
+  const articleId=req.params.articleId;
+  const newComment=req.body.newComment;
+  const commentedBy=req.user;
+  // console.log(commentedBy);
+  // console.log("article id = ");
+  // console.log(articleId);
+  
+  const docComment=new CommentsModel({
+    commentBody:newComment,
+    commentedBy:commentedBy,
+    articleName:articleId
+  });
+   
+  docComment.save(function(err){
+    if(err){
+      console.log(err);
+    }else{
+      console.log("commentAdded");
+      // console.log(docComment.date);
+    }
+  });
+
+  res.send({success:"true",docComment:docComment});
+  }
+
+async function getComments(req,res){
+const articleId=req.params.articleId;
+console.log("comments"+articleId);
+CommentsModel.find({articleName:articleId},function(err,found){
+  if(err){
+    console.log(err);
+  }else{
+    console.log("users found");
+    res.send({success:"true",found:found});
+
+  }
+}).populate("commentedBy")
+}
+
+async function deleteComment(req,res){
+  const commentId=req.params.commentId;
+  console.log(commentId);
+  ArticleModel.updateOne({},{$pull:{comments:{_id:commentId}}},function(err){
+    if(err){
+      console.log(err);
+    }else{
+      // console.log("commented by "+ req.user.firstName);
+      res.redirect("/admin/dashboard/viewArticles/"+req.params.articleId);
+    }
+  })
+}
+
+module.exports.deleteComment=deleteComment;
+module.exports.addcomment=addcomment;
+module.exports.getComments=getComments;
+module.exports.viewThisArticle=viewThisArticle;
+module.exports.viewArticles=viewArticles;
+module.exports.addArticle=addArticle;
+module.exports.addNewArticle=addNewArticle;

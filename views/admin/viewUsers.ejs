@@ -1,0 +1,48 @@
+<%-include("../partials/header.ejs") %>
+<h1 class="text-center">All the registered Users </h1>
+  <table class="table border">
+    <thead>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Edit</th>
+      <th>Delete</th>
+
+    </thead>
+    <%users.forEach(function(user){%>
+    <tbody>
+      <tr>
+        <td><%=user.fullName%></td>
+        <td><%=user.username%></td>
+        <td><a href="/admin/dashboard/viewUsers/editUser/<%=user._id%>"><i class="fa-solid fa-pen-to-square"></i></a></td>
+        <!-- Button trigger modal -->
+<td>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  <i class="fa-solid fa-trash"></i>
+</button>
+</td>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        are you sure?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a class="btn btn-danger" href="/admin/dashboard/viewUsers/eleteUser/<%=user._id%>">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!-- <td><a href="/admin/deleteUser/<%=user._id%>"><i class="fa-solid fa-trash"></i></a></td> -->
+      </tr>
+    </tbody>
+    <%})%>
+  </table>
+  <%-include("../partials/footer.ejs") %>

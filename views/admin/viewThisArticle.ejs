@@ -1,0 +1,47 @@
+<%-include("../partials/header.ejs") %>
+
+
+
+
+<div class="container-fluid   m-0 p-0 ">
+  <br><br>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1 class="text-center"><%=article.title%></h1>
+      </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <span><%=article.date.toDateString()%></span><br>
+      <span>By : <%=article.postedBy.fullName%></span>
+      </div>
+  </div>
+  <br>
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <img src="/uploadFolder/<%=article.image%>" alt="picture" height="350px" width="750px">
+    </div>
+  </div>
+  <br><br>
+  <div class="row justify-content-center ">
+    <div class="col-8">
+      <p class="text-center"><%=article.content%></p>
+      <hr>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-6">
+    <a href="#">
+      <i class="fa-solid fa-thumbs-up fa-2xl ms-2"></i>
+    </a>
+    <a href="#">
+      <i class="fa-solid fa-thumbs-down fa-2xl ms-3"></i>
+    </a>
+      <hr>
+    </div>
+  </div>
+  <br><br>
+  
+ 
+<%-include("../partials/comments.ejs") %>  
+<%-include("../partials/footer.ejs") %>
